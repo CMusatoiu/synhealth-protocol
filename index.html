@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SynHealth Protocol — Bespoke Peptide Engineering</title>
+<meta name="description" content="A private research intake. Answer a few questions, get routed to the SynHealth resources built for your protocol." />
+<link rel="icon" href="assets/synhealth-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Netlify build-time form detection (submitted via fetch in script.js) -->
+<form name="protocol-onboarding" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <input type="text" name="goal" />
+  <input type="text" name="experience" />
+  <input type="text" name="intensity" />
+  <input type="text" name="bot-field" />
+</form>
+
+<div id="app">
+
+  <!-- ===== LANDING ===== -->
+  <section id="view-landing" class="view view-landing" data-view="landing">
+    <nav class="topnav">
+      <div class="brand">
+        <img src="assets/synhealth-logo.png" alt="SynHealth" class="brand-mark" />
+        <span class="brand-word">SYNHEALTH <span class="dot">·</span> PROTOCOL</span>
+      </div>
+      <a class="shop-link" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">VISIT SHOP <span class="arrow">→</span></a>
+    </nav>
+
+    <div class="hero">
+      <div class="watermark" aria-hidden="true">S</div>
+      <div class="hero-content">
+        <p class="eyebrow">BESPOKE PEPTIDE ENGINEERING</p>
+        <h1 class="headline">SYNHEALTH <em>PROTOCOL</em></h1>
+        <p class="subtext">A private research intake. Quietly routed, evidence-led, built around what you're actually studying.</p>
+        <button id="begin-btn" class="cta-pill">
+          <span>BEGIN ONBOARDING</span>
+          <span class="cta-line"></span>
+        </button>
+      </div>
+      <div class="hero-footer">
+        <span>EST. MMXXVI</span><span class="sep">•</span><span>CONFIDENTIAL INTAKE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ONBOARDING ===== -->
+  <section id="view-onboarding" class="view view-onboarding" data-view="onboarding" hidden>
+    <div class="ob-grid" aria-hidden="true"></div>
+    <div class="ob-topbar">
+      <div class="brand small">
+        <span class="brand-line"></span>
+        <span>SYNHEALTH · ONBOARDING</span>
+      </div>
+      <button id="ob-close" class="icon-btn" aria-label="Exit onboarding">✕</button>
+    </div>
+
+    <div class="ob-body">
+      <div id="ob-step-wrap"></div>
+    </div>
+
+    <div class="ob-footer">
+      <button id="ob-back" class="link-btn"><span class="arrow-left">←</span> BACK</button>
+      <button id="ob-next" class="pill-btn">CONTINUE <span class="arrow">→</span></button>
+    </div>
+    <p class="ob-hint">PRESS ENTER TO CONTINUE · ESC TO EXIT</p>
+  </section>
+
+  <!-- ===== RESOURCES ===== -->
+  <section id="view-resources" class="view view-resources" data-view="resources" hidden>
+    <nav class="topnav topnav-res">
+      <div class="brand">
+        <img src="assets/synhealth-logo.png" alt="SynHealth" class="brand-mark" />
+        <span class="brand-word">SYNHEALTH <span class="dot">·</span> PROTOCOL</span>
+      </div>
+      <a class="shop-link" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">VISIT SHOP <span class="arrow">→</span></a>
+    </nav>
+
+    <div class="res-page">
+      <div class="res-header">
+        <div class="res-badge"><img src="assets/synhealth-logo.png" alt="SynHealth" /></div>
+        <p class="eyebrow">EST. RESEARCH COLLECTIVE</p>
+        <h1 class="res-title">SYNHEALTH RESOURCES</h1>
+        <p id="res-sub" class="res-sub">Find your protocol resources below.</p>
+      </div>
+
+      <div class="res-section">
+        <p class="res-section-label">RECOMMENDED FOR YOU</p>
+        <div id="res-recommended" class="res-cards"></div>
+      </div>
+
+      <div class="res-section">
+        <p class="res-section-label">ALL CATEGORIES</p>
+        <div id="res-all-cats" class="res-cards res-cards-compact"></div>
+      </div>
+
+      <div class="res-section">
+        <p class="res-section-label">LEARN MORE</p>
+        <div id="res-learn" class="res-cards res-cards-compact"></div>
+      </div>
+
+      <div class="res-footer">
+        <button id="res-restart" class="link-btn">RETAKE ONBOARDING</button>
+        <span class="res-footer-meta">EST. MMXXVI • CONFIDENTIAL INTAKE</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
