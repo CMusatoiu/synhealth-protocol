@@ -16,8 +16,14 @@
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
+html{background:var(--bg);}
 body{
-  background:var(--bg);
+  background:
+    radial-gradient(ellipse 65% 45% at 50% 0%, rgba(201,168,76,0.11), transparent 62%),
+    radial-gradient(ellipse 55% 40% at 10% 100%, rgba(201,168,76,0.07), transparent 65%),
+    radial-gradient(ellipse 50% 35% at 95% 85%, rgba(201,168,76,0.05), transparent 60%),
+    linear-gradient(165deg, #0d0b08 0%, #100d09 45%, #0a0908 100%);
+  background-attachment:fixed;
   color:var(--text);
   font-family:var(--sans);
   -webkit-font-smoothing:antialiased;
@@ -26,6 +32,12 @@ body{
 img{max-width:100%;display:block;}
 button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit;}
 a{color:inherit;text-decoration:none;}
+
+#bg-particles{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  width:100%;height:100%;
+}
+#app{position:relative;z-index:1;}
 
 .view{min-height:100vh;position:relative;}
 .view[hidden]{display:none;}
@@ -81,38 +93,61 @@ a{color:inherit;text-decoration:none;}
 /* ---------- landing hero ---------- */
 .view-landing{
   display:flex;flex-direction:column;
-  background:
-    radial-gradient(ellipse 60% 45% at 50% 38%, rgba(201,168,76,0.10), transparent 70%),
-    var(--bg);
 }
 .hero{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;text-align:center;padding:60px 24px 40px;
   min-height:calc(100vh - 90px);
 }
-.watermark{
+
+/* Real logo watermark: base image + mask-cloned gradient tone (overlay) +
+   mask-cloned diagonal gloss sweep (screen), looping continuously. */
+.watermark-wrap{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);
-  font-family:var(--serif);font-weight:600;
-  font-size:clamp(280px, 42vw, 640px);
-  line-height:1;
+  width:clamp(320px, 38vw, 560px);
   pointer-events:none;user-select:none;
-  background-image:linear-gradient(120deg,
-    rgba(201,168,76,0.10) 0%,
-    rgba(201,168,76,0.10) 40%,
-    var(--gold-light) 48%,
-    var(--gold) 52%,
-    rgba(201,168,76,0.10) 60%,
-    rgba(201,168,76,0.10) 100%);
-  background-size:260% 260%;
-  background-position:-40% 0%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;
-  transition:background-position 1.15s cubic-bezier(.22,.61,.36,1), filter .6s ease;
-  filter:brightness(0.9);
+  z-index:1;
 }
-.hero:hover .watermark{
-  background-position:140% 100%;
-  filter:brightness(1.15);
+.watermark-img{
+  width:100%;height:auto;
+  opacity:.22;
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.75)) drop-shadow(0 0 44px rgba(169,140,90,.28));
+}
+.watermark-tone,.watermark-gloss{
+  position:absolute;inset:0;
+  -webkit-mask-image:url(assets/synhealth-logo.png);mask-image:url(assets/synhealth-logo.png);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  opacity:.4;
+}
+.watermark-tone{
+  background:linear-gradient(180deg, rgba(255,236,200,.4) 0%, rgba(255,255,255,.06) 45%, rgba(120,80,30,.4) 100%);
+  mix-blend-mode:overlay;
+}
+.watermark-gloss{
+  background:linear-gradient(115deg,
+    rgba(0,0,0,0) 38%, rgba(255,255,255,.08) 44%,
+    rgba(255,245,220,.9) 50%,
+    rgba(255,255,255,.08) 56%, rgba(0,0,0,0) 62%);
+  background-size:250% 100%;
+  background-repeat:no-repeat;
+  mix-blend-mode:screen;
+  opacity:.65;
+  animation:logoGloss 5.5s ease-in-out infinite;
+}
+@keyframes logoGloss{
+  0%{background-position:-150% 0;}
+  60%{background-position:250% 0;}
+  100%{background-position:250% 0;}
+}
+
+/* Guarantees headline/CTA stay readable regardless of watermark placement */
+.hero-scrim{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(920px, 92vw);height:min(600px, 72vh);
+  background:radial-gradient(ellipse at center, rgba(10,9,8,.78) 0%, rgba(10,9,8,.55) 42%, rgba(10,9,8,0) 74%);
+  pointer-events:none;z-index:1;
 }
 .hero-content{position:relative;z-index:2;max-width:640px;}
 .headline{
@@ -148,7 +183,6 @@ a{color:inherit;text-decoration:none;}
 
 /* ---------- onboarding ---------- */
 .view-onboarding{
-  background:var(--bg);
   display:flex;flex-direction:column;
 }
 .ob-grid{
@@ -227,8 +261,29 @@ a{color:inherit;text-decoration:none;}
 }
 
 /* ---------- resources ---------- */
-.view-resources{background:radial-gradient(ellipse 70% 40% at 50% 0%, rgba(201,168,76,0.08), transparent 65%), var(--bg);}
-.res-page{max-width:760px;margin:0 auto;padding:20px 24px 90px;}
+.view-resources{position:relative;overflow:hidden;}
+.res-page{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:20px 24px 90px;}
+
+/* Decorative animated DNA helix, drifting slowly behind the resource cards */
+.helix-deco{
+  position:absolute;top:0;bottom:0;width:120px;
+  pointer-events:none;z-index:1;opacity:.55;
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+.helix-deco-left{left:-20px;}
+.helix-deco-right{right:-20px;}
+.helix-deco svg{width:100%;height:auto;}
+.helix-strand{animation:helixDrift 9s ease-in-out infinite;}
+.helix-deco-right .helix-strand{animation-duration:11s;animation-direction:reverse;}
+@keyframes helixDrift{
+  0%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-22px) rotate(1.5deg);}
+  100%{transform:translateY(0) rotate(0deg);}
+}
+@media (max-width:900px){
+  .helix-deco{display:none;}
+}
 .res-header{text-align:center;padding:20px 0 46px;}
 .res-badge{
   width:74px;height:74px;border-radius:50%;

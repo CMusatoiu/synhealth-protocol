@@ -342,7 +342,113 @@
 
   window.addEventListener('hashchange', routeFromHash);
 
+  // ---------- ambient gold particle field ----------
+  function initParticles(){
+    var canvas = document.getElementById('bg-particles');
+    if(!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var W, H, DPR, particles = [];
+
+    function resize(){
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+    }
+    function makeParticle(){
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: (Math.random() * 1.5 + 0.5) * DPR,
+        vy: -(Math.random() * 0.16 + 0.03) * DPR,
+        vx: (Math.random() - 0.5) * 0.05 * DPR,
+        baseA: Math.random() * 0.45 + 0.15,
+        tw: Math.random() * Math.PI * 2,
+        twSpeed: Math.random() * 0.015 + 0.006
+      };
+    }
+    function seed(){
+      resize();
+      var count = Math.min(80, Math.floor((window.innerWidth * window.innerHeight) / 16000));
+      particles = [];
+      for(var i=0;i<count;i++){ particles.push(makeParticle()); }
+    }
+    function frame(){
+      ctx.clearRect(0, 0, W, H);
+      for(var i=0;i<particles.length;i++){
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy; p.tw += p.twSpeed;
+        if(p.y < -10){ p.y = H + 10; p.x = Math.random() * W; }
+        if(p.x < -10) p.x = W + 10;
+        if(p.x > W + 10) p.x = -10;
+        var alpha = p.baseA * (0.55 + 0.45 * Math.sin(p.tw));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(201,168,76,' + alpha.toFixed(3) + ')';
+        ctx.shadowColor = 'rgba(201,168,76,0.9)';
+        ctx.shadowBlur = p.r * 3;
+        ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    seed();
+    if(!reduceMotion){ requestAnimationFrame(frame); } else { frame(); }
+    var resizeTimer;
+    window.addEventListener('resize', function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(seed, 200);
+    });
+  }
+
+  // ---------- decorative animated DNA helix (resources page) ----------
+  function buildHelixSVG(){
+    var width = 120, height = 900, turns = 5.5, amplitude = 32, steps = 90, rungEvery = 5;
+    var cx = width / 2;
+    function xAt(t){ return cx + amplitude * Math.sin(t * Math.PI * 2 * turns); }
+
+    var ptsA = [], ptsB = [];
+    for(var i=0;i<=steps;i++){
+      var t = i / steps;
+      var y = t * height;
+      ptsA.push([xAt(t), y]);
+      ptsB.push([2 * cx - xAt(t), y]);
+    }
+    function pathFor(pts){
+      return 'M' + pts.map(function(p){ return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L');
+    }
+    var rungs = '';
+    for(var i=0;i<=steps;i+=rungEvery){
+      var a = ptsA[i], b = ptsB[i];
+      rungs += '<line x1="'+a[0].toFixed(1)+'" y1="'+a[1].toFixed(1)+'" x2="'+b[0].toFixed(1)+'" y2="'+b[1].toFixed(1)+'" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>';
+    }
+    var dots = '';
+    for(var i=0;i<=steps;i+=3){
+      dots += '<circle cx="'+ptsA[i][0].toFixed(1)+'" cy="'+ptsA[i][1].toFixed(1)+'" r="2.2" fill="rgba(232,212,139,0.55)"/>';
+      dots += '<circle cx="'+ptsB[i][0].toFixed(1)+'" cy="'+ptsB[i][1].toFixed(1)+'" r="2.2" fill="rgba(201,168,76,0.4)"/>';
+    }
+    return '<svg viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+
+      '<g class="helix-strand">'+
+        rungs+
+        '<path d="'+pathFor(ptsA)+'" fill="none" stroke="rgba(232,212,139,0.5)" stroke-width="2" stroke-linecap="round"/>'+
+        '<path d="'+pathFor(ptsB)+'" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="2" stroke-linecap="round"/>'+
+        dots+
+      '</g>'+
+    '</svg>';
+  }
+  function initHelixDeco(){
+    var svg = buildHelixSVG();
+    ['helix-left','helix-right'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.innerHTML = svg;
+    });
+  }
+
   // ---------- init ----------
   loadAnswers();
   routeFromHash();
+  initParticles();
+  initHelixDeco();
 })();

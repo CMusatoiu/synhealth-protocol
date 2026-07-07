@@ -13,6 +13,8 @@
 </head>
 <body>
 
+<canvas id="bg-particles" aria-hidden="true"></canvas>
+
 <!-- Netlify build-time form detection (submitted via fetch in script.js) -->
 <form name="protocol-onboarding" data-netlify="true" netlify-honeypot="bot-field" hidden>
   <input type="text" name="name" />
@@ -36,7 +38,12 @@
     </nav>
 
     <div class="hero">
-      <div class="watermark" aria-hidden="true">S</div>
+      <div class="watermark-wrap" aria-hidden="true">
+        <img class="watermark-img" src="assets/synhealth-logo.png" alt="" />
+        <div class="watermark-tone"></div>
+        <div class="watermark-gloss"></div>
+      </div>
+      <div class="hero-scrim" aria-hidden="true"></div>
       <div class="hero-content">
         <p class="eyebrow">BESPOKE PEPTIDE ENGINEERING</p>
         <h1 class="headline">SYNHEALTH <em>PROTOCOL</em></h1>
@@ -83,6 +90,9 @@
       </div>
       <a class="shop-link" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">VISIT SHOP <span class="arrow">→</span></a>
     </nav>
+
+    <div class="helix-deco helix-deco-left" aria-hidden="true" id="helix-left"></div>
+    <div class="helix-deco helix-deco-right" aria-hidden="true" id="helix-right"></div>
 
     <div class="res-page">
       <div class="res-header">
