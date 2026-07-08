@@ -34,14 +34,19 @@
         <img src="assets/synhealth-logo.png" alt="SynHealth" class="brand-mark" />
         <span class="brand-word">SYNHEALTH <span class="dot">·</span> PROTOCOL</span>
       </div>
-      <a class="shop-link" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">VISIT SHOP <span class="arrow">→</span></a>
+      <div class="topnav-actions">
+        <button id="landing-dashboard" class="shop-link shop-link-button" type="button">DASHBOARD <span class="arrow">→</span></button>
+        <a class="shop-link" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">VISIT SHOP <span class="arrow">→</span></a>
+      </div>
     </nav>
 
     <div class="hero">
-      <div class="watermark-wrap" aria-hidden="true">
-        <img class="watermark-img" src="assets/synhealth-logo.png" alt="" />
-        <div class="watermark-tone"></div>
-        <div class="watermark-gloss"></div>
+      <div class="watermark-outer" aria-hidden="true">
+        <div class="watermark-wrap" id="watermark-tilt">
+          <img class="watermark-img" src="assets/synhealth-logo.png" alt="" />
+          <div class="watermark-tone"></div>
+          <div class="watermark-gloss"></div>
+        </div>
       </div>
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="hero-content">
@@ -79,6 +84,285 @@
       <button id="ob-next" class="pill-btn">CONTINUE <span class="arrow">→</span></button>
     </div>
     <p class="ob-hint">PRESS ENTER TO CONTINUE · ESC TO EXIT</p>
+  </section>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section id="view-dashboard" class="view view-dashboard" data-view="dashboard" hidden>
+    <div class="dash-shell">
+      <aside class="dash-sidebar">
+        <a class="dash-brand" href="#/dashboard" aria-label="SynHealth dashboard home">
+          <img src="assets/synhealth-logo.png" alt="" />
+          <span><strong>SYNHEALTH</strong><em>RESEARCH PROTOCOL</em></span>
+        </a>
+
+        <nav class="dash-nav" aria-label="Dashboard sections">
+          <button class="dash-nav-btn active" type="button" data-dash-nav="overview"><span class="dash-nav-icon">□</span><span>Dashboard</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="today"><span class="dash-nav-icon">○</span><span>Today</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="protocol"><span class="dash-nav-icon">✦</span><span>Protocol</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="bloodwork"><span class="dash-nav-icon">△</span><span>Batchwork</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="calculator"><span class="dash-nav-icon">⌁</span><span>Calculator</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="education"><span class="dash-nav-icon">◇</span><span>Peptide Edu</span><em>•</em></button>
+          <button class="dash-nav-btn" type="button" data-dash-nav="intake"><span class="dash-nav-icon">▣</span><span>Intake</span><em>→</em></button>
+        </nav>
+
+        <div class="dash-account">
+          <span class="dash-status">SIGNED IN</span>
+          <strong id="dash-account-email">researcher@synhealth.co.uk</strong>
+          <span>CLIENT PORTAL</span>
+          <button id="dash-signout" type="button">Exit session</button>
+        </div>
+      </aside>
+
+      <main class="dash-main">
+        <header class="dash-header">
+          <div>
+            <p class="dash-kicker" id="dash-kicker">MEMBER DASHBOARD</p>
+            <h1 id="dash-title">Your research protocol</h1>
+          </div>
+          <a class="dash-shop" href="https://peptide-design.netlify.app" target="_blank" rel="noopener">Shop <span>↗</span></a>
+        </header>
+
+        <section class="dash-panel active" data-dash-panel="overview">
+          <div class="dash-hero-panel dash-hero-visual">
+            <div>
+              <p class="dash-mini">INTAKE · PRIVATE</p>
+              <h2 id="dash-welcome">The foundation of your protocol</h2>
+              <p id="dash-summary">Complete the private research intake to shape the resources, categories and quality documents shown inside your dashboard.</p>
+              <button id="dash-start-intake" class="dash-primary" type="button">Continue Intake <span>→</span></button>
+            </div>
+            <div class="dash-human-card" aria-hidden="true">
+              <svg viewBox="0 0 280 380" role="img" class="bio-scan-figure">
+                <defs>
+                  <linearGradient id="bodyGold" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0" stop-color="#f0dc98" stop-opacity=".96" />
+                    <stop offset=".5" stop-color="#b69035" stop-opacity=".82" />
+                    <stop offset="1" stop-color="#5e4618" stop-opacity=".68" />
+                  </linearGradient>
+                  <radialGradient id="bodyGlow" cx="50%" cy="35%" r="60%">
+                    <stop offset="0" stop-color="#f6e6b3" stop-opacity=".5" />
+                    <stop offset="1" stop-color="#c9a84c" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <ellipse cx="140" cy="202" rx="98" ry="162" fill="url(#bodyGlow)" />
+                <path d="M140 34c20.5 0 37 16.2 37 36.2s-16.5 36.2-37 36.2-37-16.2-37-36.2S119.5 34 140 34Z" fill="none" stroke="url(#bodyGold)" stroke-width="2.4"/>
+                <path d="M99 126c15-16 27-22 41-22s26 6 41 22" fill="none" stroke="url(#bodyGold)" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M100 126c-8 28-13 63-13 103 0 82 20 119 53 119s53-37 53-119c0-40-5-75-13-103" fill="none" stroke="url(#bodyGold)" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M99 139c-34 30-54 72-66 126M181 139c34 30 54 72 66 126" fill="none" stroke="url(#bodyGold)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M120 340l-26 32M160 340l26 32" fill="none" stroke="url(#bodyGold)" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M140 106v238M118 162c12 6 32 6 44 0M108 204h64M112 242h56M124 286h32" fill="none" stroke="#f6e8ba" stroke-width="1" stroke-opacity=".4" stroke-linecap="round"/>
+                <path d="M116 148c12 18 36 18 48 0M112 190c16 12 40 12 56 0M116 258c12 10 36 10 48 0" fill="none" stroke="#f6e8ba" stroke-width=".9" stroke-opacity=".22" stroke-linecap="round"/>
+                <circle cx="140" cy="166" r="4.6" fill="#f1dc92"/><circle cx="140" cy="205" r="3.8" fill="#c9a84c"/><circle cx="124" cy="242" r="3.4" fill="#c9a84c"/><circle cx="156" cy="242" r="3.4" fill="#c9a84c"/>
+                <path d="M58 102c22-46 58-70 82-70s60 24 82 70M45 302c22 44 55 66 95 66s73-22 95-66" fill="none" stroke="#c9a84c" stroke-width="1" stroke-opacity=".18"/>
+              </svg>
+              <span class="scan-line scan-a"></span>
+              <span class="scan-line scan-b"></span>
+              <small>PROTOCOL MAP</small>
+            </div>
+          </div>
+
+          <div class="dash-stats">
+            <article><span>01</span><strong>Research focus</strong><em id="dash-focus">Awaiting intake</em></article>
+            <article><span>02</span><strong>Protocol stage</strong><em id="dash-stage">Not configured</em></article>
+            <article><span>03</span><strong>Quality status</strong><em>Documentation-first</em></article>
+          </div>
+
+          <div class="dash-grid dash-grid-top">
+            <article class="dash-card dash-card-large">
+              <p class="dash-card-label">RECOMMENDED TRACK</p>
+              <h3 id="dash-rec-title">Browse the full catalogue</h3>
+              <p id="dash-rec-copy">After onboarding, this panel prioritizes the SynHealth category most relevant to your stated research goal.</p>
+              <a id="dash-rec-link" href="https://peptide-design.netlify.app/?view=shop&cat=all" target="_blank" rel="noopener">View compounds <span>↗</span></a>
+            </article>
+            <article class="dash-card">
+              <p class="dash-card-label">ORDER READINESS</p>
+              <h3>3 checks open</h3>
+              <p>Research-use scope, category fit, and batch documentation should be reviewed before checkout.</p>
+            </article>
+            <article class="dash-card">
+              <p class="dash-card-label">NEXT ACTION</p>
+              <h3>Build shortlist</h3>
+              <p>Use Protocol and Batchwork together: choose a category, then attach documentation.</p>
+            </article>
+          </div>
+
+          <div class="dash-split">
+            <article class="dash-card">
+              <p class="dash-card-label">TODAY'S QUEUE</p>
+              <div id="dash-queue" class="dash-mini-list"></div>
+            </article>
+            <article class="dash-card">
+              <p class="dash-card-label">PROTOCOL SNAPSHOT</p>
+              <div class="dash-rings">
+                <span style="--p:76"><strong>76%</strong><em>Intake</em></span>
+                <span style="--p:62"><strong>62%</strong><em>Docs</em></span>
+                <span style="--p:48"><strong>48%</strong><em>Shortlist</em></span>
+              </div>
+            </article>
+          </div>
+
+          <div class="dash-profile-upload">
+            <div class="dash-upload-preview" id="dash-upload-preview">
+              <span>+</span>
+            </div>
+            <div>
+              <p class="dash-card-label">CLIENT FILE</p>
+              <h3>Upload progress photos or lab documents</h3>
+              <p>Add reference images locally to personalize this dashboard preview. Files are not uploaded anywhere in this prototype.</p>
+            </div>
+            <label class="dash-upload-btn">
+              Add file
+              <input id="dash-photo-upload" type="file" accept="image/*" />
+            </label>
+          </div>
+
+          <div class="dash-client-matrix">
+            <article><small>PROFILE</small><strong>Researcher file</strong><span>Photo · Documents · Notes</span></article>
+            <article><small>ORDER</small><strong>Store handoff</strong><span>Filtered category links</span></article>
+            <article><small>QUALITY</small><strong>Batch evidence</strong><span>COA · HPLC · ID</span></article>
+            <article><small>LEARNING</small><strong>Education queue</strong><span>6 video modules</span></article>
+          </div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="today">
+          <div class="dash-page-intro">
+            <p class="dash-card-label">DAILY OPERATING VIEW</p>
+            <h2>What needs attention before an order moves forward.</h2>
+          </div>
+          <div id="dash-today-list" class="dash-list dash-list-rich"></div>
+          <div class="dash-split">
+            <article class="dash-card">
+              <p class="dash-card-label">CHECK-IN NOTES</p>
+              <h3>Private research log</h3>
+              <textarea id="dash-notes" class="dash-notes" placeholder="Add private notes for this research shortlist..."></textarea>
+            </article>
+            <article class="dash-card">
+              <p class="dash-card-label">STATUS</p>
+              <div class="dash-status-stack">
+                <span><strong>Research scope</strong><em>Required</em></span>
+                <span><strong>Batch docs</strong><em>Pending selection</em></span>
+                <span><strong>Checkout</strong><em>Store handoff</em></span>
+              </div>
+            </article>
+          </div>
+          <div class="dash-timeline">
+            <div><span>09:00</span><strong>Review selected research category</strong><em>Dashboard</em></div>
+            <div><span>12:00</span><strong>Save batch document links</strong><em>Batchwork</em></div>
+            <div><span>16:00</span><strong>Run vial concentration calculator</strong><em>Calculator</em></div>
+          </div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="protocol">
+          <div class="dash-page-intro">
+            <p class="dash-card-label">TRACK ARCHITECTURE</p>
+            <h2>Category map, research rationale, and store handoff.</h2>
+          </div>
+          <div id="dash-protocol-map" class="dash-protocol-map"></div>
+          <div class="dash-protocol-detail">
+            <div>
+              <p class="dash-card-label">ACTIVE BUILD</p>
+              <h3>From objective to documented shortlist</h3>
+              <p>Select one research track, attach the relevant documentation, then hand off into the SynHealth store with the matching category pre-filtered.</p>
+            </div>
+            <div class="protocol-steps">
+              <span>Goal</span><span>Track</span><span>Batchwork</span><span>Store</span>
+            </div>
+          </div>
+          <div class="dash-card dash-card-wide">
+            <p class="dash-card-label">TRACK RULE</p>
+            <h3>Documentation before selection</h3>
+            <p>This portal deliberately separates educational research information from medical direction. It helps organize categories, documentation, and order planning; it does not prescribe human-use protocols.</p>
+          </div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="bloodwork">
+          <div class="dash-page-intro">
+            <p class="dash-card-label">QUALITY CONTROL</p>
+            <h2>Batchwork replaces bloodwork for a research-supply portal.</h2>
+          </div>
+          <div class="dash-card dash-card-wide">
+            <p class="dash-card-label">BATCHWORK</p>
+            <h3>Documentation queue</h3>
+            <p>Use this area as the SynHealth equivalent of bloodwork: batch IDs, COA status, dispatch references and order notes.</p>
+            <div id="dash-doc-table" class="dash-doc-table"></div>
+          </div>
+          <div class="dash-file-grid">
+            <article><span>PDF</span><strong>COA packet</strong><em>Waiting for batch</em></article>
+            <article><span>CSV</span><strong>Order log</strong><em>Local preview</em></article>
+            <article><span>IMG</span><strong>Photo reference</strong><em>Optional upload</em></article>
+          </div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="calculator">
+          <div class="dash-page-intro">
+            <p class="dash-card-label">CALCULATOR</p>
+            <h2>Research vial concentration and order planning.</h2>
+          </div>
+          <div class="dash-calculator dash-dose-calculator">
+            <div>
+              <p class="dash-card-label">LAB MATH</p>
+              <h3>Concentration calculator</h3>
+              <p>Enter your own vial and target values. This calculates concentration, draw volume, syringe units, and estimated vial yield for research planning only.</p>
+            </div>
+            <div class="dash-calc-grid">
+              <label>Vial amount (mg)<input id="calc-vial-mg" type="number" min="0" step="0.1" value="10" /></label>
+              <label>Diluent volume (ml)<input id="calc-water-ml" type="number" min="0" step="0.1" value="2" /></label>
+              <label>Target amount (mcg)<input id="calc-target-mcg" type="number" min="0" step="10" value="250" /></label>
+              <label>Order subtotal (£)<input id="dash-subtotal" type="number" min="0" value="75" /></label>
+            </div>
+            <div class="dash-syringe-stage" aria-hidden="true">
+              <div class="vial-object">
+                <span class="vial-cap"></span>
+                <span class="vial-glass"></span>
+                <strong id="vial-label">10mg</strong>
+              </div>
+              <div class="syringe-object">
+                <span class="syringe-plunger"></span>
+                <span class="syringe-barrel"><i id="syringe-fill"></i></span>
+                <span class="syringe-needle"></span>
+                <span class="syringe-tip"></span>
+              </div>
+              <div class="calc-readout">
+                <span id="syringe-readout">0.050 ml</span>
+                <em>calculated draw volume</em>
+              </div>
+            </div>
+            <div class="dash-calc-results">
+              <output id="calc-concentration">5.00 mg/ml</output>
+              <output id="calc-volume">0.05 ml per target</output>
+              <output id="calc-units">5 insulin units</output>
+              <output id="calc-yield">40 target draws per vial</output>
+              <output id="dash-calc-output">£25 until free UK delivery.</output>
+            </div>
+            <p class="dash-disclaimer">No dosage recommendation is generated here. All values are user-entered research calculations and must not be interpreted as clinical advice.</p>
+          </div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="education">
+          <div class="dash-page-intro">
+            <p class="dash-card-label">PEPTIDE EDU</p>
+            <h2>Short-form learning cards with video-style previews.</h2>
+          </div>
+          <div id="dash-education-cards" class="dash-video-grid"></div>
+        </section>
+
+        <section class="dash-panel" data-dash-panel="intake">
+          <div class="dash-hero-panel">
+            <div>
+              <p class="dash-mini">8 QUICK SECTIONS</p>
+              <h2>Private SynHealth intake</h2>
+              <p>Answer the short research intake and return here for a more tailored resource dashboard.</p>
+            </div>
+            <button class="dash-primary" type="button" data-open-intake>Begin Intake <span>→</span></button>
+          </div>
+          <div class="dash-intake-grid">
+            <article><span>01</span><strong>Identity</strong><em>Name and contact route</em></article>
+            <article><span>02</span><strong>Research goal</strong><em>Category matching</em></article>
+            <article><span>03</span><strong>Experience</strong><em>Resource depth</em></article>
+            <article><span>04</span><strong>Readiness</strong><em>Store handoff timing</em></article>
+          </div>
+        </section>
+      </main>
+    </div>
   </section>
 
   <!-- ===== RESOURCES ===== -->

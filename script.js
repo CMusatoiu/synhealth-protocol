@@ -18,6 +18,37 @@
     {tag:'VERIFY',   title:'Batch Documentation',     sub:'Look up testing docs for a specific batch.',       href:'/?view=docs'}
   ];
 
+  var DASH_TASKS = [
+    {num:'01', title:'Confirm research category', sub:'Use onboarding data to choose the correct catalogue track.', meta:'2 min'},
+    {num:'02', title:'Review research-use policy', sub:'Check eligibility, intended-use scope and ordering terms.', meta:'Required'},
+    {num:'03', title:'Attach documentation', sub:'Keep COA and batch verification links beside the shortlist.', meta:'Before checkout'},
+    {num:'04', title:'Open store handoff', sub:'Send the selected category to the SynHealth storefront filter.', meta:'Ready'}
+  ];
+
+  var PROTOCOL_TRACKS = [
+    {tag:'TRACK A', title:'Metabolic', sub:'Incretin, mitochondrial and metabolic research compounds.', products:'Retatrutide · MOTS-c · NAD+ · Tesamorelin', cat:'metabolic'},
+    {tag:'TRACK B', title:'Growth Factors', sub:'Growth-factor and repair-signalling research peptides.', products:'BPC-157 · TB-500 · Ipamorelin · CJC-1295', cat:'regenerate'},
+    {tag:'TRACK C', title:'Peptide Standards', sub:'Reference peptides for in vitro pathway and assay research.', products:'Epithalon · GHK-Cu · DSIP', cat:'longevity'},
+    {tag:'TRACK D', title:'Copper Peptides', sub:'Copper-peptide and multi-peptide research blends.', products:'GHK-Cu · Glow · Klow', cat:'beauty'},
+    {tag:'TRACK E', title:'Melanocortin', sub:'Melanocortin and anti-inflammatory research peptides.', products:'KPV · PT-141 · Melanotan II', cat:'immune'}
+  ];
+
+  var DOC_ROWS = [
+    {code:'COA', title:'Certificate of analysis', status:'Attach per batch', note:'Match batch ID before ordering'},
+    {code:'HPLC', title:'Purity method', status:'Review', note:'Check assay method and date'},
+    {code:'ID', title:'Identity verification', status:'Ready', note:'Retain with research notes'},
+    {code:'SHIP', title:'Dispatch record', status:'After order', note:'Add tracking and receipt'}
+  ];
+
+  var VIDEOS = [
+    {time:'03:42', tag:'STARTER', title:'How to read a SynHealth batch file', sub:'COA, batch ID, method, date and what to save before checkout.', tone:'gold'},
+    {time:'05:10', tag:'CALCULATOR', title:'Vial concentration math', sub:'How mg, ml, mcg and insulin units relate in research calculations.', tone:'green'},
+    {time:'04:26', tag:'QUALITY', title:'Documentation-first ordering', sub:'A simple review flow for product pages, claims and third-party documents.', tone:'blue'},
+    {time:'06:18', tag:'CATALOGUE', title:'Choosing a research category', sub:'Metabolic, growth-factor, copper peptide and reference-standard tracks.', tone:'red'},
+    {time:'02:55', tag:'POLICY', title:'Research-use boundaries', sub:'Eligibility, intended use and why the portal avoids clinical instructions.', tone:'gold'},
+    {time:'07:04', tag:'OPS', title:'Building an order shortlist', sub:'Move from objective to category, then to documentation and store handoff.', tone:'green'}
+  ];
+
   var EXPERIENCE_OPTIONS = [
     {value:'new',      label:'New to peptides',            sub:'Just starting to explore the research'},
     {value:'some',     label:'Some experience',             sub:"I've sourced compounds before"},
@@ -33,8 +64,8 @@
   var STEPS = [
     {id:'welcome', kind:'intro',
       eyebrow:'WELCOME',
-      titleParts:['A few questions, ', 'then your protocol.'],
-      sub:'Takes about a minute. Press Enter to continue.'},
+      titleParts:['Just 3 quick questions, ', 'then your protocol.'],
+      sub:'Takes about 30 seconds. Press Enter to continue.'},
     {id:'name', kind:'text', num:'01', section:'IDENTITY',
       title:"What's your full name?", placeholder:'Jane Doe', field:'name', inputType:'text'},
     {id:'email', kind:'text', num:'02', section:'CONTACT',
@@ -50,9 +81,26 @@
       eyebrow:'ANALYZING', title:'Building your protocol…', sub:'This will only take a moment.'}
   ];
 
+  // Landing "Begin Onboarding" only asks the 3 essentials so it stays quick;
+  // Experience/Readiness live in the dashboard's Intake tab as an optional
+  // follow-up, resumed directly (skipping already-answered lead fields).
+  var QUICK_IDS = ['welcome', 'name', 'email', 'goal', 'done'];
+  function stepsForFlow(flow, answers){
+    if(flow === 'extended'){
+      var hasLead = answers.name && answers.email && answers.goal;
+      if(hasLead){
+        return STEPS.filter(function(s){ return ['experience', 'intensity', 'done'].indexOf(s.id) >= 0; });
+      }
+      return STEPS;
+    }
+    return STEPS.filter(function(s){ return QUICK_IDS.indexOf(s.id) >= 0; });
+  }
+
   var state = {
     view: 'landing',
     step: 0,
+    flow: 'quick',
+    activeSteps: stepsForFlow('quick', {}),
     answers: {name:'', email:'', goal:'', experience:'', intensity:''}
   };
 
@@ -60,8 +108,10 @@
   var els = {
     landing: $('#view-landing'),
     onboarding: $('#view-onboarding'),
+    dashboard: $('#view-dashboard'),
     resources: $('#view-resources'),
     beginBtn: $('#begin-btn'),
+    landingDashboard: $('#landing-dashboard'),
     obClose: $('#ob-close'),
     obBack: $('#ob-back'),
     obNext: $('#ob-next'),
@@ -70,7 +120,38 @@
     resRecommended: $('#res-recommended'),
     resAllCats: $('#res-all-cats'),
     resLearn: $('#res-learn'),
-    resRestart: $('#res-restart')
+    resRestart: $('#res-restart'),
+    dashTitle: $('#dash-title'),
+    dashKicker: $('#dash-kicker'),
+    dashAccountEmail: $('#dash-account-email'),
+    dashWelcome: $('#dash-welcome'),
+    dashSummary: $('#dash-summary'),
+    dashFocus: $('#dash-focus'),
+    dashStage: $('#dash-stage'),
+    dashRecTitle: $('#dash-rec-title'),
+    dashRecCopy: $('#dash-rec-copy'),
+    dashRecLink: $('#dash-rec-link'),
+    dashQueue: $('#dash-queue'),
+    dashTodayList: $('#dash-today-list'),
+    dashProtocolMap: $('#dash-protocol-map'),
+    dashDocTable: $('#dash-doc-table'),
+    dashEducationCards: $('#dash-education-cards'),
+    dashSubtotal: $('#dash-subtotal'),
+    dashCalcOutput: $('#dash-calc-output'),
+    dashPhotoUpload: $('#dash-photo-upload'),
+    dashUploadPreview: $('#dash-upload-preview'),
+    calcVialMg: $('#calc-vial-mg'),
+    calcWaterMl: $('#calc-water-ml'),
+    calcTargetMcg: $('#calc-target-mcg'),
+    calcConcentration: $('#calc-concentration'),
+    calcVolume: $('#calc-volume'),
+    calcUnits: $('#calc-units'),
+    calcYield: $('#calc-yield'),
+    syringeFill: $('#syringe-fill'),
+    syringeReadout: $('#syringe-readout'),
+    vialLabel: $('#vial-label'),
+    dashStartIntake: $('#dash-start-intake'),
+    dashSignout: $('#dash-signout')
   };
 
   function saveAnswers(){
@@ -93,24 +174,27 @@
     opts = opts || {};
     if(state.view === view && !opts.force){ return; }
     state.view = view;
-    ['landing','onboarding','resources'].forEach(function(v){
+    document.body.setAttribute('data-app-view', view);
+    ['landing','onboarding','dashboard','resources'].forEach(function(v){
       els[v].hidden = (v !== view);
     });
     if(!opts.skipHash){ location.hash = '#/' + (view==='landing' ? '' : view); }
     window.scrollTo(0,0);
     if(view==='onboarding'){ renderStep(); }
+    if(view==='dashboard'){ renderDashboard(); }
     if(view==='resources'){ renderResources(); }
   }
 
   function routeFromHash(){
     var h = location.hash.replace('#/','');
     if(h==='onboarding'){ setView('onboarding', {skipHash:true}); }
+    else if(h==='dashboard'){ setView('dashboard', {skipHash:true}); }
     else if(h==='resources'){ setView('resources', {skipHash:true}); }
     else{ setView('landing', {skipHash:true}); }
   }
 
   // ---------- onboarding ----------
-  function currentStep(){ return STEPS[state.step]; }
+  function currentStep(){ return state.activeSteps[state.step]; }
 
   function stepValid(){
     var s = currentStep();
@@ -203,7 +287,7 @@
     if(s.kind==='outro'){
       saveAnswers();
       submitLead();
-      setTimeout(function(){ setView('resources'); }, 1200);
+      setTimeout(function(){ setView('dashboard'); }, 1200);
     }
   }
 
@@ -216,7 +300,7 @@
   function advance(){
     var s = currentStep();
     if(s.kind!=='outro' && !stepValid()) return;
-    if(state.step < STEPS.length-1){
+    if(state.step < state.activeSteps.length-1){
       state.step++;
       renderStep();
     }
@@ -316,18 +400,175 @@
     '</a>';
   }
 
+  // ---------- dashboard ----------
+  function renderDashboard(){
+    loadAnswers();
+    var a = state.answers;
+    var goalCat = catById(a.goal);
+    var firstName = (a.name || '').trim().split(/\s+/)[0];
+
+    els.dashAccountEmail.textContent = a.email || 'researcher@synhealth.co.uk';
+    els.dashWelcome.textContent = firstName ? ('Welcome back, ' + firstName + '.') : 'The foundation of your protocol';
+    els.dashSummary.textContent = goalCat
+      ? ('Your dashboard is prioritizing ' + goalCat.label.toLowerCase() + ' resources, batch documents and store links.')
+      : 'Complete the private research intake to shape the resources, categories and quality documents shown inside your dashboard.';
+    els.dashFocus.textContent = goalCat ? goalCat.label : 'Awaiting intake';
+    els.dashStage.textContent = a.intensity ? readableIntensity(a.intensity) : 'Not configured';
+    els.dashRecTitle.textContent = goalCat ? goalCat.label : 'Browse the full catalogue';
+    els.dashRecCopy.textContent = goalCat ? goalCat.tagline : 'After onboarding, this panel prioritizes the SynHealth category most relevant to your stated research goal.';
+    els.dashRecLink.href = STORE_URL + '/?view=shop&cat=' + (goalCat ? goalCat.id : 'all');
+
+    els.dashQueue.innerHTML = DASH_TASKS.slice(0,3).map(taskMiniHtml).join('');
+    els.dashTodayList.innerHTML = DASH_TASKS.map(taskRichHtml).join('');
+    els.dashProtocolMap.innerHTML = PROTOCOL_TRACKS.map(protocolTrackHtml).join('');
+    els.dashDocTable.innerHTML = DOC_ROWS.map(docRowHtml).join('');
+    els.dashEducationCards.innerHTML = VIDEOS.map(videoCardHtml).join('');
+
+    updateCalculator();
+    setDashboardPanel(getActivePanel() || 'overview');
+  }
+
+  function taskMiniHtml(t){
+    return '<div class="dash-mini-row"><span>'+t.num+'</span><strong>'+t.title+'</strong><em>'+t.meta+'</em></div>';
+  }
+
+  function taskRichHtml(t){
+    return '<article><span>'+t.num+'</span><div><strong>'+t.title+'</strong><p>'+t.sub+'</p><em>'+t.meta+'</em></div></article>';
+  }
+
+  function protocolTrackHtml(t){
+    return '<article>'+
+      '<small>'+t.tag+'</small>'+
+      '<strong>'+t.title+'</strong>'+
+      '<p>'+t.sub+'</p>'+
+      '<em>'+t.products+'</em>'+
+      '<a href="'+STORE_URL+'/?view=shop&cat='+t.cat+'" target="_blank" rel="noopener">Open category ↗</a>'+
+    '</article>';
+  }
+
+  function docRowHtml(row){
+    return '<div class="dash-doc-row">'+
+      '<span>'+row.code+'</span>'+
+      '<strong>'+row.title+'<small>'+row.note+'</small></strong>'+
+      '<em>'+row.status+'</em>'+
+    '</div>';
+  }
+
+  function videoCardHtml(video){
+    return '<article class="dash-video-card tone-'+video.tone+'">'+
+      '<div class="dash-video-thumb">'+
+        '<span class="dash-play">▶</span>'+
+        '<em>'+video.time+'</em>'+
+      '</div>'+
+      '<p class="dash-card-label">'+video.tag+'</p>'+
+      '<h3>'+video.title+'</h3>'+
+      '<p>'+video.sub+'</p>'+
+    '</article>';
+  }
+
+  function readableIntensity(value){
+    var found = INTENSITY_OPTIONS.filter(function(o){ return o.value === value; })[0];
+    return found ? found.label : value;
+  }
+
+  function getActivePanel(){
+    var active = document.querySelector('.dash-panel.active');
+    return active ? active.getAttribute('data-dash-panel') : 'overview';
+  }
+
+  function setDashboardPanel(panel){
+    var shell = document.querySelector('.dash-shell');
+    if(shell){ shell.setAttribute('data-panel', panel); }
+    Array.prototype.forEach.call(document.querySelectorAll('[data-dash-panel]'), function(el){
+      el.classList.toggle('active', el.getAttribute('data-dash-panel') === panel);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-dash-nav]'), function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-dash-nav') === panel);
+    });
+    var titles = {
+      overview:['MEMBER DASHBOARD','Your research protocol'],
+      today:['TODAY','Current protocol actions'],
+      protocol:['PROTOCOL','Research track map'],
+      bloodwork:['BATCHWORK','Quality documentation'],
+      calculator:['CALCULATOR','Order planning'],
+      education:['PEPTIDE EDU','Research resources'],
+      intake:['INTAKE','Private onboarding']
+    };
+    var t = titles[panel] || titles.overview;
+    els.dashKicker.textContent = t[0];
+    els.dashTitle.textContent = t[1];
+  }
+
+  function updateCalculator(){
+    if(!els.dashSubtotal || !els.dashCalcOutput) return;
+    var subtotal = Number(els.dashSubtotal.value || 0);
+    var remaining = Math.max(0, 100 - subtotal);
+    els.dashCalcOutput.textContent = remaining
+      ? ('£' + remaining.toFixed(0) + ' until free UK delivery.')
+      : 'Free UK delivery threshold reached.';
+
+    if(!els.calcVialMg) return;
+    var vialMg = Math.max(0, Number(els.calcVialMg.value || 0));
+    var waterMl = Math.max(0, Number(els.calcWaterMl.value || 0));
+    var targetMcg = Math.max(0, Number(els.calcTargetMcg.value || 0));
+    var concentrationMgMl = waterMl > 0 ? vialMg / waterMl : 0;
+    var targetMl = concentrationMgMl > 0 ? (targetMcg / 1000) / concentrationMgMl : 0;
+    var units = targetMl * 100;
+    var yieldCount = targetMcg > 0 ? (vialMg * 1000) / targetMcg : 0;
+    els.calcConcentration.textContent = concentrationMgMl.toFixed(2) + ' mg/ml';
+    els.calcVolume.textContent = targetMl.toFixed(3) + ' ml per target';
+    els.calcUnits.textContent = units.toFixed(1) + ' insulin units';
+    els.calcYield.textContent = Math.floor(yieldCount) + ' target draws per vial';
+    if(els.syringeFill){
+      els.syringeFill.style.width = Math.max(8, Math.min(78, units)).toFixed(1) + '%';
+    }
+    if(els.syringeReadout){ els.syringeReadout.textContent = targetMl.toFixed(3) + ' ml'; }
+    if(els.vialLabel){ els.vialLabel.textContent = vialMg ? (vialMg.toFixed(vialMg % 1 ? 1 : 0) + 'mg') : 'vial'; }
+  }
+
+  function handlePhotoUpload(file){
+    if(!file || !file.type || file.type.indexOf('image/') !== 0) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      els.dashUploadPreview.innerHTML = '';
+      var img = document.createElement('img');
+      img.alt = 'Uploaded client reference';
+      img.src = reader.result;
+      els.dashUploadPreview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  }
+
   // ---------- events ----------
-  els.beginBtn.addEventListener('click', function(){
+  function startOnboarding(flow){
+    state.flow = flow;
+    state.activeSteps = stepsForFlow(flow, state.answers);
     state.step = 0;
     setView('onboarding');
-  });
+  }
+  els.beginBtn.addEventListener('click', function(){ startOnboarding('quick'); });
+  els.landingDashboard.addEventListener('click', function(){ setView('dashboard'); });
   els.obClose.addEventListener('click', function(){ setView('landing'); });
   els.obNext.addEventListener('click', advance);
   els.obBack.addEventListener('click', back);
   els.resRestart.addEventListener('click', function(){
-    state.step = 0;
     state.answers = {name:'', email:'', goal:'', experience:'', intensity:''};
-    setView('onboarding');
+    startOnboarding('quick');
+  });
+  els.dashStartIntake.addEventListener('click', function(){ startOnboarding('extended'); });
+  els.dashSignout.addEventListener('click', function(){ setView('landing'); });
+  els.dashSubtotal.addEventListener('input', updateCalculator);
+  els.calcVialMg.addEventListener('input', updateCalculator);
+  els.calcWaterMl.addEventListener('input', updateCalculator);
+  els.calcTargetMcg.addEventListener('input', updateCalculator);
+  els.dashPhotoUpload.addEventListener('change', function(e){
+    handlePhotoUpload(e.target.files && e.target.files[0]);
+  });
+
+  document.addEventListener('click', function(e){
+    var nav = e.target.closest('[data-dash-nav]');
+    if(nav){ setDashboardPanel(nav.getAttribute('data-dash-nav')); }
+    if(e.target.closest('[data-open-intake]')){ startOnboarding('extended'); }
   });
 
   document.addEventListener('keydown', function(e){
@@ -446,9 +687,37 @@
     });
   }
 
+  // ---------- cursor-tracked watermark tilt (matches the reference site's
+  // subtle mouse-driven 3D parallax: small rotateX/rotateY + translate) ----------
+  function initWatermarkTilt(){
+    var hero = document.querySelector('.hero');
+    var target = document.getElementById('watermark-tilt');
+    if(!hero || !target) return;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduceMotion) return;
+    var maxRotate = 6, maxShift = 10;
+    function onMove(e){
+      var rect = target.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      var nx = Math.max(-1, Math.min(1, (e.clientX - cx) / (rect.width / 2)));
+      var ny = Math.max(-1, Math.min(1, (e.clientY - cy) / (rect.height / 2)));
+      var rotY = nx * maxRotate;
+      var rotX = -ny * maxRotate * 0.6;
+      var tx = nx * maxShift;
+      var ty = ny * maxShift * 0.6;
+      target.style.transform = 'rotateX(' + rotX.toFixed(2) + 'deg) rotateY(' + rotY.toFixed(2) + 'deg) translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0)';
+    }
+    function onLeave(){
+      target.style.transform = 'rotateX(0deg) rotateY(0deg) translate3d(0,0,0)';
+    }
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+  }
+
   // ---------- init ----------
   loadAnswers();
   routeFromHash();
   initParticles();
   initHelixDeco();
+  initWatermarkTilt();
 })();
